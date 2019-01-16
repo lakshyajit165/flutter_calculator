@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 void main() => runApp(MyApp());
 
@@ -28,6 +29,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   String output = "0";
 
+  String exp = "";//new
+
   String _output = "0";
   double num1 = 0.0;
   double num2 = 0.0;
@@ -39,6 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
            num1 = 0.0;
              num2 = 0.0;
              operand = "";
+             exp = ""; //new
       }else if(buttonText == "+" || buttonText == "-" || buttonText == "x" || buttonText == "/"){
 
         num1 = double.parse(output);
@@ -47,12 +51,25 @@ class _MyHomePageState extends State<MyHomePage> {
   
         _output = "0";
 
+        exp += buttonText; //new
+
       }else if(buttonText == "."){
         if(_output.contains(".")){
-          print("Already contains a decimal");
+          //print("Already contains a decimal");
+          Fluttertoast.showToast(
+            
+            msg: "Already contains a decimal",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM, // also possible "TOP" and "CENTER"
+            backgroundColor: Colors.black87,
+            textColor: Colors.white
+
+          );
+          
           return;
         }else{
           _output = _output + buttonText;
+          exp += buttonText; //new
         }
       
       }else if(buttonText == "="){
@@ -60,18 +77,22 @@ class _MyHomePageState extends State<MyHomePage> {
 
         if(operand == "+"){
           _output = (num1 + num2).toString();
+          exp = double.parse(_output).toStringAsFixed(2); //new
         }
 
         if(operand == "-"){
           _output = (num1 - num2).toString();
+          exp = double.parse(_output).toStringAsFixed(2); //new
         }
 
         if(operand == "x"){
           _output = (num1 * num2).toString();
+          exp = double.parse(_output).toStringAsFixed(2); //new
         }
 
         if(operand == "/"){
           _output = (num1 / num2).toString();
+          exp = double.parse(_output).toStringAsFixed(2); //new
         }
 
         num1 = 0.0;
@@ -80,6 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
       
       }else{
         _output = _output + buttonText;
+        exp += buttonText;
       }
     print(_output);
 
@@ -115,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
             new Container(
                 alignment: Alignment.centerRight,
                 padding:
-                    new EdgeInsets.symmetric(vertical: 24.0, horizontal: 12.0),
+                    new EdgeInsets.symmetric(vertical: 18.0, horizontal: 12.0),
                 child: new Text(output,
                     style: new TextStyle(
                       fontSize: 48.0,
@@ -124,6 +146,17 @@ class _MyHomePageState extends State<MyHomePage> {
              new Expanded(
               child: new Divider(),
             ),
+
+             new Container(
+                alignment: Alignment.centerRight,
+                padding:
+                    new EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
+                child: new Text(exp,
+                    style: new TextStyle(
+                      color: Colors.blueGrey,
+                      fontSize: 32.0,
+                      fontWeight: FontWeight.bold,
+                    ))),
             new Column(children: [
               new Row(children: [
                 buildButton("7"),
